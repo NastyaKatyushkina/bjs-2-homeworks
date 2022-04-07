@@ -1,4 +1,4 @@
-'use strit'
+"use strit"
 
 function solveEquation(a, b, c) {
   let arr = [];
