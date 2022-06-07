@@ -19,46 +19,29 @@ function cachingDecoratorNew(func) {
   return wrapper;
 }
 
-
 function debounceDecoratorNew(func, ms) {
   let timeout;
-  let flag = false;
-
-  function wrapper(...args) {
-    if (flag === false) {
-      func.call(this, ...args);
-      flag = true;
-      timeout = setTimeout(() => {
-        flag = false;
-      }, ms);
-
-    } else {
-      clearTimeout(timeout);
-      timeout = setTimeout(() => { flag = false }, ms);
-    }
-  }
-  return wrapper;
+  func(...rest);
+  let flag = true;
+  return function (...rest) {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      if (!flag) {
+        func.call(this, ...rest); 
+        flag = true;
+      }
+    }, ms);
+  };   
 }
 
-function debounceDecorator2(func, ms) {
-  let timeout;
-  let flag = false;
+function debounceDecorator2(debounceDecoratorNew) {
+
   wrapper.count = 0;
 
   function wrapper(...args) {
-    if (flag === false) {
-      func.call(this, ...args);
-      flag = true;
-      timeout = setTimeout(() => {
-        flag = false;
-      }, ms);
-
-    } else {
-      clearTimeout(timeout);
-      timeout = setTimeout(() => { flag = false }, ms);
-    }
-    wrapper.count += 1
+    wrapper.count++;
+    return func.call(this, ...args)
   }
 
-  return wrapper;
+  return wrapper
 }
